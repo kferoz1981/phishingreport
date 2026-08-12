@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Report Phishing</title>
+    <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 15px; text-align: center; }
+        .btn { background-color: #d9534f; color: white; border: none; padding: 12px 20px; 
+               font-size: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; }
+        .btn:hover { background-color: #c9302c; }
+        #status { margin-top: 15px; font-weight: bold; color: #333; }
+    </style>
+</head>
+<body>
+    <h3>Phishing Report</h3>
+    <p>Report this suspicious email to <b>admin@avaada.com</b> for investigation.</p>
+    <button class="btn" onclick="reportEmail()">Report Email</button>
+    <div id="status"></div>
+
+    <script>
+        Office.onReady();
+
+        function reportEmail() {
+            document.getElementById("status").innerText = "Processing report...";
+            const item = Office.context.mailbox.item;
+            
+            // Build report body text
+            const bodyText = `[PHISHING REPORT]
+User: ${Office.context.mailbox.userProfile.emailAddress}
+Subject: ${item.subject}
+Sender: ${item.sender ? item.sender.emailAddress : 'Unknown'}
+Date: ${new Date().toLocaleString()}`;
+
+            // Create a mailto draft or forward report to admin@avaada.com
+            const mailtoUrl = `mailto:admin@avaada.com?subject=${encodeURIComponent('[PHISHING REPORT] ' + item.subject)}&body=${encodeURIComponent(bodyText)}`;
+            
+            window.location.href = mailtoUrl;
+            document.getElementById("status").innerText = "Report generated! Send the email in Outlook.";
+        }
+    </script>
+</body>
+</html>
